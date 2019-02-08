@@ -60,7 +60,29 @@ import '../css/style.styl'
 
 - 图片
 
-图片可以放在src/images目录，webpack会自动压缩打包并插入到相关文件中。
+图片可以放在src/images目录，webpack会根据引用自动压缩打包并插入到相关文件中。
 
 ## 特性
 
+- **无需编译打包的静态资源**
+
+public目录下除了index.html之外的文件都不会被编译，所以可以将无需编译的静态资源放在该目录下，在index.html中直接引入即可，build之后这部分资源路径不会改变。所以在使用cdn路径等情况下，需要手动修改这部分引用。
+
+- **使用了eslint校验js**
+
+采用的是standard标准。
+
+- **Tree Shaking**
+
+脚手架会将未使用到的代码块进行tree-shaking以缩减代码体积，包括js及css。
+
+- **按需引入polyfill**
+
+可以直接在项目中使用Promise等高级API，脚手架会根据配置的浏览器环境自动引入相关特性的polyfill而不是直接引入整个polyfill。
+
+- **autoprefixer**
+
+脚手架会根据配置的browserlist来自动为相关css属性添加前缀。
+
+
+- **...**
