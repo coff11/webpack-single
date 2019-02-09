@@ -16,9 +16,9 @@
  
 
 ## 脚手架
-- **从svn获取**
+- **从github获取**
 ```
-svn://10.170.27.248/zhaohang/front-end/Template/webpack-single
+$ git clone git@github.com:coff11/webpack-single.git
 ```
 
 - **安装依赖**
@@ -44,7 +44,7 @@ $ npm run build
 
 我们所有的`DOM`结构等都应当直接写在`index.html`中，另外有一些需要说明的地方：
 1. 我们不需要在`index.html`中手动引入`src`下的`js`、`css`等文件，只要依赖关系正确，这些文件在编译完成之后会被自动插入到`index.html`中。我们需要关注的是一些不用编译的第三方库文件，比如`jquery.min.js`，这类文件应当直接放在`public`目录下，并且需要手动在`index.html`中引入。打包之后这些静态文件会被原封不动地引入`index.html`，所以当我们使用了`cdn`路径时，需要手动更改这类路径。
-2. 在`index.html`中可以使用`img`标签，引用`src`目录下的图片文件在打包完成之后路径将被正确替换为打包后的路径。
+2. 经过了配置，现在你在`index.html`中可以使用`img`标签，引用`src`目录下的图片文件在打包完成之后路径将被正确替换为打包后的路径。
 
 **关于css：**
 
@@ -116,7 +116,7 @@ import '../css/reset.css'
 
 **关于字体：**
 
-脚手架配置了相关功能，可以对字体文件打包处理，建议字体源文件放在`src/assets/fonts`目录下，css文件放在`src/css`文件下。这种情况下需要手动更改一下`css`文件中的引用路径。
+脚手架已经配置了相关功能，可以对字体文件打包处理，建议字体源文件放在`src/assets/fonts`目录下，css文件放在`src/css`文件下。这种情况下需要手动更改一下`css`文件中的字体文件的引用路径。
 
 
 ## 支持的特性
@@ -124,6 +124,8 @@ import '../css/reset.css'
 **eslint校验代码**
 
 脚手架默认开启`eslint`对`js`代码进行校验，校验出错的情况下编译将不被允许。校验规则采用的是`Standard`，`eslint`的所有规则都是可插拔的，具体可以参考[Rules](https://cn.eslint.org/docs/rules/)。
+
+当`devServer`运行抛错或者编译未通过时，查看终端是否有`eslint`的报错，针对相关提示修改代码使其符合规范即可，但是需要注意`eslint`的校验也不是完全正确的，可以作为参考即可。
 
 当然，如果你觉得`eslint`过于繁琐，也可以手动关闭它：
 ```
@@ -149,7 +151,7 @@ import '../css/reset.css'
 
 脚手架实现了根据配置的浏览器环境自动编译需要编译的代码，也就是说在项目中你可以随意使用`es6+`的特性，比如箭头函数，模板字符串，解构赋值，`const`等等`es6`特性。
 
-在之前的`Parcel`打包器中，如果想要使用`promise`以及一些数组对象的新`API`，则需要全局引入`babel-polyfill`，带来的后果就是文件体积增大近`100k`。当然，在这个脚手架中，已经实现了按需引入`polyfill`，也就是说比如你只使用了`promise`这一种特性，则编译时只会加入`es6.promise`模块，这种按需加载的方式大大减少了代码体积。
+在之前的`Parcel`打包器中，如果想要使用`promise`以及一些数组对象的新`API`，则需要全局引入`babel-polyfill`，带来的后果就是文件体积骤增。当然，在这个脚手架中，已经实现了按需引入`polyfill`，也就是说比如你只使用了`promise`这一种特性，则脚手架编译时只会自动帮你加入`es6.promise`模块，而不会引入其他模块，这种按需加载的方式大大减少了代码体积。
 
 **autoprefixer**
 
@@ -223,12 +225,14 @@ console.log(a())
 
 只需要配置`output`中的`publicPath`即可：
 ```
+// webpack.base.js
 output: {
   publicPath: 'http://www.cdn.com'
 },
 ``` 
 如果只想添加图片资源的`publicPath`：
 ```
+// webpack.base.js
 {
   test: /\.(png|jpg|jpeg|gif)$/,
   use: [
@@ -237,7 +241,7 @@ output: {
       options: {
         limit: 1024,  // 1k限制
         outputPath: 'images/',
-        publicPath: 'https://www.cdn.com'
++       publicPath: 'https://www.cdn.com'
       }
     },
     {
@@ -246,17 +250,37 @@ output: {
   ]
 },
 ```
-**开发环境proxy**
+**开发环境devServer**
+
+这一部分脚手架并未做过多配置，可以根据下面的代码或者官方文档配置相关参数即可。
+
 ```
 // webpack.dev.js
-proxy: {
-  '/api': {
-    target: 'http://localhost:3000',
-    pathRewrite: {
-      '/api': ''
+devServer: {
+  // 可以更改host实现在移动端调试
+  host: '0.0.0.0',
+
+  // 端口
+  port: 9000,
+  
+  // server开启后自动打开浏览器
+  open: false,
+
+  // server资源的根目录  
+  contentBase: './dist',
+
+  // 配置代理
+  proxy: {
+    '/api': {
+      target: 'http://localhost:3000',
+      pathRewrite: {
+        '/api': ''
+      }
     }
   }
 }
 ```
+`webpack`对`proxy`的实现借助了中间件`http-proxy-middleware`，更多高级的用法可以参考 [文档](https://github.com/chimurai/http-proxy-middleware#options)。
 
 
+**更多配置可以直接参考 [webpack文档](https://www.webpackjs.com/)。**

@@ -1,3 +1,5 @@
+const path = require('path')
+
 const { smart } = require('webpack-merge')
 const base = require('./webpack.base.js')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -7,11 +9,11 @@ module.exports = smart(base, {
   devServer: {
     port: 9000,
     progress: true,
-    contentBase: './build',
+    contentBase: path.resolve(__dirname, 'dist'),
     open: false,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:9001',
         pathRewrite: {
           '/api': ''
         }
