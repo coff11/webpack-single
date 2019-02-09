@@ -51,7 +51,7 @@ module.exports = {
               publicPath: '../'
             }
           },
-          'css-loader',  //处理@import
+          'css-loader', // 处理@import
           'postcss-loader'
         ]
       },
@@ -117,13 +117,13 @@ module.exports = {
           {
             loader: 'url-loader',
             options: {
-              limit: 1024,  // 1k限制
-              outputPath: 'images/',
+              limit: 1024, // 1k限制
+              outputPath: 'images/'
               // publicPath: 'https://www.cdn.com'
             }
           },
           {
-            loader: 'image-webpack-loader',
+            loader: 'image-webpack-loader'
           }
         ]
       },
@@ -135,12 +135,12 @@ module.exports = {
         test: /\.(woff2?|eot|ttf|otf|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
-            limit: 10000,
-            name: '[name]-[hash:5].[ext]',
-            output: 'fonts/',
-            // publicPath: '', 多用于CDN
+          limit: 10000,
+          name: '[name]-[hash:5].[ext]',
+          output: 'fonts/'
+          // publicPath: '', 多用于CDN
         }
-      },
+      }
     ]
   }
 }

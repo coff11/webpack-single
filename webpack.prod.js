@@ -21,9 +21,9 @@ module.exports = smart(base, {
     new CleanWebpackPlugin('./dist'),
     new MiniCssExtractPlugin({
       filename: 'css/[name].[hash:5].css'
-    }),
+    })
   ],
   output: {
     // publicPath: 'http://www.cdn.com'
-  },
+  }
 })
