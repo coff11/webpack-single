@@ -15,7 +15,7 @@
 - 如果是一个中小型项目，可能项目中只会用到`vue`本身或者`jquery`等技术，则可以考虑使用这个脚手架。
  
 
-## 脚手架
+## 脚手架  
 - **从github获取**
 ```
 $ git clone git@github.com:coff11/webpack-single.git
@@ -116,7 +116,11 @@ import '../css/reset.css'
 
 **关于字体：**
 
-脚手架已经配置了相关功能，可以对字体文件打包处理，建议字体源文件放在`src/assets/fonts`目录下，css文件放在`src/css`文件下。这种情况下需要手动更改一下`css`文件中的字体文件的引用路径。
+脚手架已经配置了相关功能，可以对字体文件打包处理，建议字体源文件放在`src/assets/fonts`目录下，css文件放在`src/assets/css`文件下。这种情况下需要手动更改一下`css`文件中的字体文件的引用路径。
+
+**关于vue文件：**
+
+脚手架支持了直接以单文件方式使用vue，即可以直接使用`.vue`文件，具体使用方式参考下文的说明。
 
 
 ## 支持的特性
@@ -281,6 +285,57 @@ devServer: {
 }
 ```
 `webpack`对`proxy`的实现借助了中间件`http-proxy-middleware`，更多高级的用法可以参考 [文档](https://github.com/chimurai/http-proxy-middleware#options)。
+
+**sourcemap**
+
+脚手架默认对`js`开启了`sourcemap`方便调试，如果不需要可以更改相关配置：
+```
+// webpack.base.js
+// 删除前面带 - 的行
+
+- devtool: 'source-map',
+
+// 如果需要其他种类的sourcemap可以自行搜索配置
+```
+
+**使用Vue**
+
+脚手架已经配置好了`.vue`文件的解析，并且在`public/index.html`中加入了`dom`节点：
+```
+<div id="app"></div>
+```
+所以你可以直接在项目中使用`vue`，但是在此之前你需要先安装`vue`：
+```
+$ npm install vue
+```
+当然别忘了项目的入口文件是`index.js`，所以可以在`index.js`中初始化`vue`。
+```
+import Vue from 'vue'
+import App from './app'
+
+new Vue({
+  render: h => h(App)
+}).$mount('#app')
+
+```
+
+## 其他
+
+**目录结构：**
+
+如果你使用`vue`，推荐的目录结构为：
+```
+├─ public
+│  └─ index.html
+├─ src
+│  ├─ assets
+│  ├─ components
+│  ├─ pages
+│  ├─ App.vue
+│  └─ index.js
+```
+
+当然你可以完全用喜欢的方式组织项目结构，但是默认配置的入口别忘了：`src/index.js`。
 
 
 **更多配置可以直接参考 [webpack文档](https://www.webpackjs.com/)。**

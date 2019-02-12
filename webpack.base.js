@@ -42,7 +42,7 @@ module.exports = {
   ],
   devtool: 'source-map',
   resolve: {
-    extensions: ['', '.js', '.vue']
+    extensions: ['.js', '.vue']
   },
   module: {
     rules: [

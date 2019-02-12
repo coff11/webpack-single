@@ -23,6 +23,6 @@ module.exports = smart(base, {
   plugins: [
     new MiniCssExtractPlugin({
       filename: 'css/[name].css'
-    }),
+    })
   ]
 })
