@@ -5,10 +5,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const PurifyCSSPlugin = require('purifycss-webpack')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
   entry: {
-    index: './src/js/index.js'
+    index: './src/index.js'
   },
   output: {
     filename: 'js/[name].[hash:5].js',
@@ -34,12 +35,15 @@ module.exports = {
     ]),
     new PurifyCSSPlugin({
       paths: glob.sync([
-        path.resolve(__dirname, './public/*.html'),
-        path.resolve(__dirname, './src/js/*.js')
+        path.resolve(__dirname, './public/*.html')
       ])
-    })
+    }),
+    new VueLoaderPlugin()
   ],
   devtool: 'source-map',
+  resolve: {
+    extensions: ['', '.js', '.vue']
+  },
   module: {
     rules: [
       {
@@ -140,6 +144,12 @@ module.exports = {
           output: 'fonts/'
           // publicPath: '', 多用于CDN
         }
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        exclude: '/node_modules',
+        include: path.resolve(__dirname, './src')
       }
     ]
   }
